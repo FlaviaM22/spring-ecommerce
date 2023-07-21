@@ -1,44 +1,43 @@
-
 package com.curso.ecommerce.springecommerce.controller;
-
-
 
 import com.curso.ecommerce.springecommerce.model.Producto;
 import com.curso.ecommerce.springecommerce.model.Usuario;
 import com.curso.ecommerce.springecommerce.service.ProductoService;
+import java.util.Optional;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/productos")
 public class ProductoController {
-    
+
     //Utilizamos esta notación para que no tengamos que instanciar el objeto sino que lo hace Spring
     @Autowired
     private ProductoService productoService;
     //Este objeto nos sirve para testear 
     private final Logger LOGGER = LoggerFactory.getLogger(ProductoController.class);
-    
+
     @GetMapping("")
     //Este objeto Model lleva info del back a la vista
-    public String show(Model model){
+    public String show(Model model) {
         //En los parámetros le asigno un nombre y el valor que voy a enviar a través de ese atributo
         model.addAttribute("productos", productoService.findAll());
         return "productos/show";
     }
-    
+
     @GetMapping("/create")
-    public String create(){
+    public String create() {
         return "productos/create";
     }
-    
+
     @PostMapping("/save")
-    public String save(Producto producto){
+    public String save(Producto producto) {
         //Nos imprime por consola esta cadena y el ToString del objeto Producto
         //Es una buena práctica, no así utilizar printOutLine para chequear si viaja correctamente la info 
         //y en qué clase estoy haciendola impersión 
@@ -49,5 +48,24 @@ public class ProductoController {
         productoService.save(producto);
         return "redirect:/productos";
     }
+
+    @GetMapping("/edit/{id}")
+    //La anotación PathVariable mapea la variable de la URL y la guarda en la variable continua a dicha anotación
+    public String edit(@PathVariable Integer id, Model model) {
+        Producto producto = new Producto();
+        Optional<Producto> optionalProducto = productoService.get(id);
+        producto = optionalProducto.get();
+        
+        LOGGER.info("Producto buscado: {}", producto);
+        model.addAttribute("producto", producto);
+        
+        return "productos/edit";
+    }
     
+    @PostMapping("/update")
+    public String update(Producto producto){
+        productoService.update(producto);
+        return "redirect: /productos";
+    }
+
 }
