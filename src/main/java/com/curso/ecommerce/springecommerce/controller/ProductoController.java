@@ -48,7 +48,7 @@ public class ProductoController {
         productoService.save(producto);
         return "redirect:/productos";
     }
-
+    
     @GetMapping("/edit/{id}")
     //La anotación PathVariable mapea la variable de la URL y la guarda en la variable continua a dicha anotación
     public String edit(@PathVariable Integer id, Model model) {
@@ -65,7 +65,13 @@ public class ProductoController {
     @PostMapping("/update")
     public String update(Producto producto){
         productoService.update(producto);
-        return "redirect: /productos";
+        return "redirect:/productos";
+    }
+    
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable Integer id){
+        productoService.delete(id);
+        return "redirect:/productos";
     }
 
 }
