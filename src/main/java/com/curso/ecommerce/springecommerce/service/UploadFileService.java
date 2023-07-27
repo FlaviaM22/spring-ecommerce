@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class UploadFileService {
     private String folder = "images//";
     
-    private String saveImages(MultipartFile file) throws IOException{
+    public String saveImage(MultipartFile file) throws IOException{
         if (!file.isEmpty()) {
             //Convertimos la imagen a ceros y unos para que pueda enviarse 
             //del cliente al servidor y lo guardo en un arreglo
@@ -28,6 +28,7 @@ public class UploadFileService {
         }
         return "default.jpg";
     }
+    
     //Recibe por parámetro el nombre de la imagen
     public void deleteImage(String nombre){
         String ruta = "images//";
